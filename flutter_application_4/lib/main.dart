@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'product_box.dart';
 import 'product_detail_page.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
 
 void main() => runApp(MyApp());
 
@@ -23,12 +26,29 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
+  
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Product> products = [];
+  
+  void deleteProduct(Product product) {
+  setState(() {
+    products.remove(product);
+  });
+    saveProducts(); // Вызов метода сохранения после удаления
+  }
+
+  Future<void> saveProducts() async {
+    final String jsonString = json.encode(products.map((product) => product.toJson()).toList());
+    final file = File('lib\assets\products.json'); // Убедитесь, что путь правильный
+    await file.writeAsString(jsonString);
+  }
+
+
 
   @override
   void initState() {
@@ -64,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProductDetailPage(product: product),
+                        builder: (context) => ProductDetailPage(product: product, deleteProduct: deleteProduct,),
                       ),
                     );
                   },
@@ -90,5 +110,14 @@ class Product {
       price: json['price'],
       imageUrl: json['imageUrl'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'description': description,
+      'price': price,
+      'imageUrl': imageUrl,
+    };
   }
 }

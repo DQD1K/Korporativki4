@@ -4,8 +4,9 @@ import 'delete_page.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final Product product;
+  final Function(Product) deleteProduct; // Add this line
 
-  const ProductDetailPage({required this.product});
+  const ProductDetailPage({required this.product, required this.deleteProduct}); // Update constructor
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +40,26 @@ class ProductDetailPage extends StatelessWidget {
               "Цена: \$${product.price}",
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8,),
-            Center(child: ElevatedButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => DeletePage()));},
-              child: const Text('Удалить обьявление'))),
+            const SizedBox(height: 8),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DeletePage(
+                        product: product,
+                        onDelete: () {
+                          deleteProduct(product); // Call the delete function
+                          Navigator.pop(context); // Go back after deletion
+                        },
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('Удалить обьявление'),
+              ),
+            ),
           ],
         ),
       ),
