@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
+import 'delete_page.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final Product product;
@@ -38,6 +39,10 @@ class ProductDetailPage extends StatelessWidget {
               "Цена: \$${product.price}",
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 8,),
+            Center(child: ElevatedButton(onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => DeletePage()));},
+              child: const Text('Удалить обьявление'))),
           ],
         ),
       ),
